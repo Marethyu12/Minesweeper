@@ -30,16 +30,18 @@ function populateMines(probabiliy) {
 
 function recur(row, col) {
 	if (cells[row][col] == '*') {
-		
+		hidden[row][col] = false;
+		// refresh
+		endGameAction("You clicked on a mine!");
 	}
 }
 
-function gameInit() {
+function initGame() {
 	hidden = new2DArray(rows, cols, true);
 	cells = new2DArray(rows, cols, '0');
 	populateMines(30.0);
 }
 
-function gameEnd() {
-
+function endGameAction(msg) {
+	alert(msg);
 }
