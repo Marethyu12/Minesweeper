@@ -10,7 +10,7 @@ function Cell(row, col) {
 	return {
 		"row" : row,
 		"col" : col,
-		"data" : '0',
+		"data" : "0",
 		"opened" : false
 	};
 }
@@ -35,8 +35,8 @@ function refresh2DGrid() {
 			
 			if (!cells[i][j].opened) {
 				$("#" + idStr).val("\u25A1"); // square char
-			} else if (data == '0') {
-				$("#" + idStr).val("");
+			} else if (data == "0") {
+				$("#" + idStr).val(" ");
 			} else {
 				$("#" + idStr).val(data); // ? char to string ?!?
 			}
@@ -48,7 +48,7 @@ function populateMines(probabiliy) {
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++) {
 			if ((Math.random() * 100) <= probabiliy) {
-				cells[i][j].data = '*';
+				cells[i][j].data = "*";
 			}
 		}
 	}
@@ -65,13 +65,13 @@ function withInBounds(row, col) {
 function fillWithNumbers() {
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++) {
-			if (cells[i][j].data == '*') {
+			if (cells[i][j].data == "*") {
 				for (var k = 0; k < 8; k++) {
 					var row = i + dr[k];
 					var col = j + dc[k];
 					
 					if (withInBounds(row, col)) {
-						cells[row][col].data++;
+						cells[i][j].data.replace("0", String.fromCharCode(parseInt(cells[i][j].data.charAt(0)) + 1));
 					}
 				}
 			}
@@ -84,9 +84,9 @@ function openCell(row, col) {
 	
 	cells[row][col].opened = true;
 	
-	if (cells[row][col].data == '*') {
+	if (cells[row][col].data == "*") {
 		clickedMine = true;
-	} else if (cells[row][col] == '0') {
+	} else if (cells[row][col] == "0") {
 		for (var i = 0; i < 8; i++) {
 			var nextRow = row + dr[i];
 			var nextCol = col + dc[i];
