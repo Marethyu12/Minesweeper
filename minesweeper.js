@@ -1,3 +1,5 @@
+// TODO: represent each cell as objects
+
 const rows = 9;
 const cols = 9;
 

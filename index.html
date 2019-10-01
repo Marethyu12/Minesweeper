@@ -2,24 +2,25 @@
 <html>
 	<head>
 		<title>Minesweeper</title>
-		<script src="minesweeper.js"></script>
+		<!--<script src="minesweeper.js"></script>-->
 		<script src="jquery-3.4.1.min.js"></script>
 		<script>
 			$(document).ready(function() {
-				for (var i = 0; i < rows; i++) {
-					for (var j = 0; j < cols; j++) {
-						$("#cells").append("<input type="button"></input>");
+				alert("no errors");
+
+				for (var i = 0; i < 10; i++) {
+					for (var j = 0; j < 10; j++) {
+						$("#cells").append("<input type=\"button\"></input>");
 					}
 
 					$("#cells").append("<br>");
 				}
+
+				alert($("#cells").html());
 			});
 		</script>
 	</head>
 	<body>
-		<id="cells" div>
-			<input type="button"></input>
-			<input type="button"></input>
-		</div>
+		<id="cells" div></div>
 	</body>
 </html>
