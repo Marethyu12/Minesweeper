@@ -2,25 +2,42 @@
 <html>
 	<head>
 		<title>Minesweeper</title>
-		<!--<script src="minesweeper.js"></script>-->
+		
+		<style>
+			.cell {
+				width: 50px,
+				height: 50px
+			}
+		</style>
+		
+		<script src="minesweeper.js"></script>
 		<script src="jquery-3.4.1.min.js"></script>
 		<script>
 			$(document).ready(function() {
-				alert("no errors");
-
-				for (var i = 0; i < 10; i++) {
-					for (var j = 0; j < 10; j++) {
-						$("#cells").append("<input type=\"button\"></input>");
-					}
-
-					$("#cells").append("<br>");
+				// alert("no errors"); // if you don't see this message means you have some errors in your code
+				
+				function createCallback(r, c) {
+					return function() {
+						openCell(r, c);
+					};
 				}
-
-				alert($("#cells").html());
+				
+				for (var i = 0; i < rows; i++) {
+					for (var j = 0; j < cols; j++) {
+						var idStr = i.toString() + j.toString();
+						
+						$("body").append("<input id=\"" + idStr + "\"type=\"button\" class=\"cell\" value=\"\"></input>");
+						$("#" + idStr).click(createCallback(i, j));
+					}
+					
+					$("body").append("<br>");
+				}
+				
+				initGame();
+				
+				// alert("no errors"); // if you don't see this message means you have some errors in your code
 			});
 		</script>
 	</head>
-	<body>
-		<id="cells" div></div>
-	</body>
+	<body></body>
 </html>
