@@ -1,10 +1,25 @@
 <! DOCTYPE html>
 <html>
 	<head>
+		<title>Minesweeper</title>
+		<script src="minesweeper.js"></script>
+		<script src="jquery-3.4.1.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				for (var i = 0; i < rows; i++) {
+					for (var j = 0; j < cols; j++) {
+						$("#cells").append("<input type="button"></input>");
+					}
+
+					$("#cells").append("<br>");
+				}
+			});
+		</script>
 	</head>
 	<body>
-		<p>
-			Hello
-		</p>
+		<id="cells" div>
+			<input type="button"></input>
+			<input type="button"></input>
+		</div>
 	</body>
 </html>
