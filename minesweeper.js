@@ -2,27 +2,15 @@
  * TODO:
  * - Implement flag feature
  * - Modify game logic a bit
- * - Fancy decorations (implement style.css)
+ * - Fancy decorations (implement style.css) (finish this!)
  * - Play again button
  * - Scoring system
- * - Fix some shit, as suggested by the console:
- *   Uncaught RangeError: Maximum call stack size exceeded
-		 at RegExp.exec (<anonymous>)
-		 at new k.fn.init (jquery-3.4.1.min.js:2)
-		 at k (jquery-3.4.1.min.js:2)
-		 at refreshGrid (minesweeper.js:61)
-		 at openCell (minesweeper.js:124)
-		 at openCell (minesweeper.js:119)
-		 at openCell (minesweeper.js:119)
-		 at openCell (minesweeper.js:119)
-		 at openCell (minesweeper.js:119)
-		 at openCell (minesweeper.js:119)
  */
 
 const rows = 10;
 const cols = 10;
 
-const probabiliy = 30.0;
+const probabiliy = 20.0;
 
 const dr = [-1, -1, -1, 0, 0, 1, 1, 1];
 const dc = [-1, 0, 1, -1, 1, -1, 0, 1];
@@ -31,11 +19,22 @@ var cells;
 
 function Cell(row, col) {
 	return {
-		"row" : row,
-		"col" : col,
-		"data" : "0",
-		"opened" : false
+		row : row,
+		col : col,
+		data : "0",
+		opened : false,
+		isMine : function() {
+			return (this.data == "*");
+		}
 	};
+}
+
+function changeClass(idStr, from, to) {
+	if ($("#" + idStr).hasClass(from)) {
+		$("#" + idStr).removeClass(from);
+	}
+	
+	$("#" + idStr).addClass(to);
 }
 
 function initGrid() {
@@ -46,6 +45,7 @@ function initGrid() {
 		
 		for (var j = 0; j < cols; j++) {
 			cells[i].push(Cell(i, j));
+			// changeClass(i.toString() + j.toString(), "opencell", "closedcell");
 		}
 	}
 }
@@ -70,7 +70,7 @@ function refreshGrid() {
 function populateMines() {
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++) {
-			if ((Math.random() * 100) <= probabiliy) {
+			if ((Math.random() * 100.0) <= probabiliy) {
 				cells[i][j].data = "*";
 			}
 		}
@@ -78,22 +78,18 @@ function populateMines() {
 }
 
 function withInBounds(row, col) {
-	if (row >= 0 && row < rows && col >= 0 && col < cols) {
-		return true;
-	}
-	
-	return false;
+	return (row >= 0 && row < rows && col >= 0 && col < cols);
 }
 
 function numberSquares() {
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++) {
-			if (cells[i][j].data == "*") {
+			if (cells[i][j].isMine()) {
 				for (var k = 0; k < 8; k++) {
 					var row = i + dr[k];
 					var col = j + dc[k];
 					
-					if (withInBounds(row, col) && cells[row][col].data != '*') {
+					if (withInBounds(row, col) && !cells[row][col].isMine()) {
 						var num = parseInt(cells[row][col].data) + 1;
 						
 						cells[row][col].data = num.toString();
@@ -105,18 +101,23 @@ function numberSquares() {
 }
 
 function openCell(row, col) {
+	if (cells[row][col].opened) {
+		return;
+	}
+	
 	var clickedMine = false;
 	
 	cells[row][col].opened = true;
+	// changeClass(i.toString() + j.toString(), "closedcell", "opencell");
 	
-	if (cells[row][col].data == "*") {
+	if (cells[row][col].isMine()) {
 		clickedMine = true;
 	} else if (cells[row][col].data == "0") {
 		for (var i = 0; i < 8; i++) {
 			var nextRow = row + dr[i];
 			var nextCol = col + dc[i];
 			
-			if (withInBounds(nextRow, nextCol) && cells[nextRow][nextCol].data != "*") {
+			if (withInBounds(nextRow, nextCol) && !cells[nextRow][nextCol].isMine()) {
 				openCell(nextRow, nextCol); // recursively open neighbouring cells
 			}
 		}
