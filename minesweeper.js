@@ -2,8 +2,9 @@
  * TODO:
  * - Implement flag feature
  * - Modify game logic a bit
- * - Decorations
+ * - Fancy decorations (implement style.css)
  * - Play again button
+ * - Scoring system
  * - Fix some shit, as suggested by the console:
  *   Uncaught RangeError: Maximum call stack size exceeded
 		 at RegExp.exec (<anonymous>)
@@ -44,7 +45,7 @@ function initGrid() {
 		cells.push([]);
 		
 		for (var j = 0; j < cols; j++) {
-			cells[i][j] = Cell(i, j);
+			cells[i].push(Cell(i, j));
 		}
 	}
 }
@@ -56,17 +57,17 @@ function refreshGrid() {
 			var idStr = i.toString() + j.toString();
 			
 			if (!cells[i][j].opened) {
-				$("#" + idStr).val("\u25A1"); // square char
+				$("#" + idStr).val("\u25A1"); // square character
 			} else if (data == "0") {
 				$("#" + idStr).val(" ");
 			} else {
-				$("#" + idStr).val(data); // ? char to string ?!?
+				$("#" + idStr).val(data);
 			}
 		}
 	}
 }
 
-function populateMines(probabiliy) {
+function populateMines() {
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++) {
 			if ((Math.random() * 100) <= probabiliy) {
@@ -84,7 +85,7 @@ function withInBounds(row, col) {
 	return false;
 }
 
-function fillWithNumbers() {
+function numberSquares() {
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++) {
 			if (cells[i][j].data == "*") {
@@ -132,7 +133,7 @@ function openCell(row, col) {
 
 function initGame() {
 	initGrid();
-	populateMines(probabiliy);
-	fillWithNumbers();
+	populateMines();
+	numberSquares();
 	refreshGrid();
 }
