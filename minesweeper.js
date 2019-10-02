@@ -1,5 +1,27 @@
+/*
+ * TODO:
+ * - Implement flag feature
+ * - Modify game logic a bit
+ * - Decorations
+ * - Play again button
+ * - Fix some shit, as suggested by the console:
+ *   Uncaught RangeError: Maximum call stack size exceeded
+		 at RegExp.exec (<anonymous>)
+		 at new k.fn.init (jquery-3.4.1.min.js:2)
+		 at k (jquery-3.4.1.min.js:2)
+		 at refreshGrid (minesweeper.js:61)
+		 at openCell (minesweeper.js:124)
+		 at openCell (minesweeper.js:119)
+		 at openCell (minesweeper.js:119)
+		 at openCell (minesweeper.js:119)
+		 at openCell (minesweeper.js:119)
+		 at openCell (minesweeper.js:119)
+ */
+
 const rows = 10;
 const cols = 10;
+
+const probabiliy = 30.0;
 
 const dr = [-1, -1, -1, 0, 0, 1, 1, 1];
 const dc = [-1, 0, 1, -1, 1, -1, 0, 1];
@@ -15,7 +37,7 @@ function Cell(row, col) {
 	};
 }
 
-function init2DGrid() {
+function initGrid() {
 	cells = [];
 	
 	for (var i = 0; i < rows; i++) {
@@ -27,7 +49,7 @@ function init2DGrid() {
 	}
 }
 
-function refresh2DGrid() {
+function refreshGrid() {
 	for (var i = 0; i < rows; i++) {
 		for (var j = 0; j < cols; j++) {
 			var data = cells[i][j].data;
@@ -70,8 +92,10 @@ function fillWithNumbers() {
 					var row = i + dr[k];
 					var col = j + dc[k];
 					
-					if (withInBounds(row, col)) {
-						cells[i][j].data.replace("0", String.fromCharCode(parseInt(cells[i][j].data.charAt(0)) + 1));
+					if (withInBounds(row, col) && cells[row][col].data != '*') {
+						var num = parseInt(cells[row][col].data) + 1;
+						
+						cells[row][col].data = num.toString();
 					}
 				}
 			}
@@ -86,33 +110,29 @@ function openCell(row, col) {
 	
 	if (cells[row][col].data == "*") {
 		clickedMine = true;
-	} else if (cells[row][col] == "0") {
+	} else if (cells[row][col].data == "0") {
 		for (var i = 0; i < 8; i++) {
 			var nextRow = row + dr[i];
 			var nextCol = col + dc[i];
 			
-			if (withInBounds(nextRow, nextCol) && cells[nextRow][nextCol] != '*') {
+			if (withInBounds(nextRow, nextCol) && cells[nextRow][nextCol].data != "*") {
 				openCell(nextRow, nextCol); // recursively open neighbouring cells
 			}
 		}
 	}
 	
-	refresh2DGrid();
+	refreshGrid();
 	
 	if (clickedMine) {
-		endGameAction("You clicked on a mine!");
+		alert("You clicked on a mine!");
+		alert("Game over bro!");
+		window.close();
 	}
 }
 
 function initGame() {
-	init2DGrid();
-	populateMines(30.0);
+	initGrid();
+	populateMines(probabiliy);
 	fillWithNumbers();
-	refresh2DGrid();
-	// location.reload(); // refresh a page
-}
-
-function endGameAction(msg) {
-	alert(msg);
-	// do some random shit...
+	refreshGrid();
 }
