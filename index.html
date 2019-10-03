@@ -1,48 +1,57 @@
 <!DOCTYPE html>
-<html lang="en-US">
-	<head>
-		<title>Minesweeper</title>
-		
-		<!--- TODO: if I put these code int style.css and import to this file, why it won't apply? --->
-		<style>
-			.cell {
-				width : 50px;
-				height : 50px;
-			}
-			
-			.closedcell {
-				background-color : grey;
-			}
-			
-			.opencell {
-				background-color : #1E90FF;
-			}
-		</style>
-		
-		<script src="minesweeper.js"></script>
-		<script src="jquery-3.4.1.min.js"></script>
-		<script>
-			$(document).ready(function() {
-				function createCallback(r, c) {
-					return function() {
-						openCell(r, c);
-					};
-				}
-				
-				for (var i = 0; i < rows; i++) {
-					for (var j = 0; j < cols; j++) {
-						var idStr = i.toString() + j.toString();
-						
-						$("body").append("<input id=\"" + idStr + "\"type=\"button\" class=\"cell\" value=\"\"></input>");
-						$("#" + idStr).click(createCallback(i, j));
-					}
-					
-					$("body").append("<br>");
-				}
-				
-				initGame();
-			});
-		</script>
-	</head>
-	<body></body>
+<html>
+    <head>
+        <title>Minesweeper</title>
+        
+        <link rel="stylesheet" href="style.css" />
+        
+        <script src="jquery-3.4.1.min.js"></script>
+        <script src="minesweeper.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#resetbutton").click(function () {
+                    initGame();
+                });
+                
+                function createCallback(r, c) {
+                    return function(mouseevent) {
+                        switch (mouseevent.which) {
+                        case 1: // left mouse button
+                            openCell(r, c);
+                            break;
+                        case 2: // middle mouse button
+                            break;
+                        case 3: // right mouse button
+                            cells[r][c].flagged = !cells[r][c].flagged;
+                            refreshGrid();
+                            break;
+                        }
+                    };
+                }
+                
+                for (var i = 0; i < rows; i++) {
+                    for (var j = 0; j < cols; j++) {
+                        var idStr = i.toString() + j.toString();
+                        
+                        $("body").append("<input id=\"" + idStr + "\"type=\"button\" class=\"cell\" value=\"\"></input>");
+                        $("#" + idStr).mousedown(createCallback(i, j));
+                        $("#" + idStr).contextmenu(function() { // remove context menu so players won't get annoyed when he flags a cell
+                            return false;
+                        });
+                    }
+                    
+                    $("body").append("<br>");
+                }
+                
+                initGame();
+            });
+        </script>
+    </head>
+    <body>
+        <div>
+            Time (secs):
+            <input id="textfield" type="text" value="" readonly />
+            <input id="resetbutton" type="button" value="Reset" />
+        </div>
+    </body>
 </html>
