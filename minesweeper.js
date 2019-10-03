@@ -1,7 +1,7 @@
-const rows = 10;
-const cols = 10;
+const rows = 9;
+const cols = 9;
 
-const probabiliy = 20.0;
+const probabiliy = 15.0;
 
 const dr = [-1, -1, -1, 0, 0, 1, 1, 1];
 const dc = [-1, 0, 1, -1, 1, -1, 0, 1];
@@ -26,7 +26,7 @@ function Cell(row, col) {
     };
 }
 
-function changeClass(idStr, from, to) {
+function changeCSSClass(idStr, from, to) {
     if ($("#" + idStr).hasClass(from)) {
         $("#" + idStr).removeClass(from);
     }
@@ -56,7 +56,7 @@ function initGrid() {
         
         for (var j = 0; j < cols; j++) {
             cells[i].push(Cell(i, j));
-            changeClass(i.toString() + j.toString(), "opencell", "closedcell");
+            changeCSSClass(i.toString() + j.toString(), "opencell", "closedcell");
         }
     }
 }
@@ -94,7 +94,7 @@ function populateMines() {
     }
 }
 
-function withInBounds(row, col) {
+function withinBounds(row, col) {
     return (row >= 0 && row < rows && col >= 0 && col < cols);
 }
 
@@ -106,7 +106,7 @@ function numberSquares() {
                     var row = i + dr[k];
                     var col = j + dc[k];
                     
-                    if (withInBounds(row, col) && !cells[row][col].isMine()) {
+                    if (withinBounds(row, col) && !cells[row][col].isMine()) {
                         var num = parseInt(cells[row][col].data) + 1;
                         
                         cells[row][col].data = num.toString();
@@ -130,7 +130,7 @@ function openCell(row, col) {
     var clickedMine = false;
     
     cells[row][col].opened = true;
-    changeClass(row.toString() + col.toString(), "closedcell", "opencell");
+    changeCSSClass(row.toString() + col.toString(), "closedcell", "opencell");
     
     if (cells[row][col].isMine()) {
         clickedMine = true;
@@ -139,21 +139,8 @@ function openCell(row, col) {
             var nextRow = row + dr[i];
             var nextCol = col + dc[i];
             
-            if (withInBounds(nextRow, nextCol) && !cells[nextRow][nextCol].isMine()) {
+            if (withinBounds(nextRow, nextCol) && !cells[nextRow][nextCol].isMine()) {
                 openCell(nextRow, nextCol); // recursively open neighbouring cells
-            }
-        }
-    }
-    
-    if (--nonminecells == 0) {
-        stopTimer();
-        alert("You won bro!");
-        
-        for (var i = 0; i < rows; i++) {
-            for (var j = 0; j < cols; j++) {
-                if (cells[i][j].isMine()) {
-                    cells[i][j].flagged = true;
-                }
             }
         }
     }
@@ -166,7 +153,20 @@ function openCell(row, col) {
             for (var j = 0; j < cols; j++) {
                 if (!cells[i][j].opened) {
                     cells[i][j].opened = true;
-                    changeClass(i.toString() + j.toString(), "closedcell", "opencell");
+                    changeCSSClass(i.toString() + j.toString(), "closedcell", "opencell");
+                }
+            }
+        }
+    }
+    
+    if (!clickedMine && --nonminecells == 0) {
+        stopTimer();
+        alert("You won bro!");
+        
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < cols; j++) {
+                if (cells[i][j].isMine()) {
+                    cells[i][j].flagged = true;
                 }
             }
         }

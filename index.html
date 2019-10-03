@@ -22,8 +22,11 @@
                         case 2: // middle mouse button
                             break;
                         case 3: // right mouse button
-                            cells[r][c].flagged = !cells[r][c].flagged;
-                            refreshGrid();
+                            if (nonminecells > 0) {
+                                cells[r][c].flagged = !cells[r][c].flagged;
+                                refreshGrid();
+                            }
+                            
                             break;
                         }
                     };
