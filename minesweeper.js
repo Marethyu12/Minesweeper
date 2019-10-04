@@ -85,7 +85,7 @@ function refreshGrid() {
 function populateMines() {
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < cols; j++) {
-            if ((Math.random() * 100.0) <= probabiliy) {
+            if ((Math.random() * 100.0) < probabiliy) {
                 cells[i][j].data = "*";
             } else {
                 nonminecells++;
