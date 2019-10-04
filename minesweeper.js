@@ -175,7 +175,7 @@ function openCell(row, col) {
     refreshGrid();
 }
 
-function initGame() {
+function newGame() {
     initGrid();
     
     nonminecells = 0;
