@@ -15,8 +15,6 @@ var timerStopped = true;
 
 function Cell(row, col) {
     return {
-        row : row,
-        col : col,
         data : "0",
         opened : false,
         flagged : false,
@@ -55,7 +53,7 @@ function initGrid() {
         cells.push([]);
         
         for (var j = 0; j < cols; j++) {
-            cells[i].push(Cell(i, j));
+            cells[i].push(Cell());
             changeCSSClass(i.toString() + j.toString(), "opencell", "closedcell");
         }
     }
