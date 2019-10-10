@@ -13,7 +13,7 @@ var seconds;
 var timer;
 var timerStopped = true;
 
-function Cell(row, col) {
+function Cell() {
     return {
         data : "0",
         opened : false,
